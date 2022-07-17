@@ -5,6 +5,7 @@
 --%>
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -15,6 +16,7 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
     </head>
     <body>
+        
         <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
             <div class="container-fluid">
                 <a class="navbar-brand" href="javascript:void(0)">SaleApp Online</a>
@@ -24,11 +26,14 @@
                 <div class="collapse navbar-collapse" id="mynavbar">
                     <ul class="navbar-nav me-auto">
                         <li class="nav-item">
-                            <a class="nav-link" href="javascript:void(0)">&#128293; Trang chu</a>
+                            <a class="nav-link" href="<c:url value="/" />">&#128293; Trang chu</a>
                         </li>
                         <c:forEach items="${categories}" var="c">
+                            <c:url value="/" var="cUrl">
+                                <c:param name="cateId" value="${c.id}" />
+                            </c:url>
                             <li class="nav-item">
-                                <a class="nav-link" href="javascript:void(0)">${c}</a>
+                                <a class="nav-link" href="${cUrl}">${c.name}</a>
                             </li>
                         </c:forEach>
                     </ul>
@@ -42,14 +47,21 @@
         </nav>
 
         <div class="container">
+            <c:if test="${products.size() == 0}">
+                <p>
+                <strong>Khong co san pham nao!!!</strong>
+                </p>
+            </c:if>
             <div class="row">
                 <c:forEach items="${products}" var="p">
                     <div class="col-md-3 col-xs-12" style="padding:10px;">
                         <div class="card">
                             <img class="card-img-top" src="https://res.cloudinary.com/dxxwcby8l/image/upload/v1647248652/dkeolz3ghc0eino87iec.jpg" alt="Card image">
                             <div class="card-body">
-                                <h4 class="card-title">${p}</h4>
-                                <p class="card-text">25.000.000 VND</p>
+                                <h4 class="card-title">${p.name}</h4>
+                                <p class="card-text">
+                                    <fmt:formatNumber value="${p.price}" type = "currency" /> VND
+                                </p>
                                 <a href="#" class="btn btn-primary">Xem chi tiet</a>
                             </div>
                         </div>

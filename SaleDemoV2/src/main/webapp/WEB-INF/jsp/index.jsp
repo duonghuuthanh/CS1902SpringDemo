@@ -5,6 +5,7 @@
 --%>
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -27,8 +28,11 @@
                             <a class="nav-link" href="javascript:void(0)">&#127758; Trang chu</a>
                         </li>
                         <c:forEach items="${categories}" var="c">
+                            <c:url value="/" var="cUrl">
+                                <c:param name="cateId" value="${c.id}"></c:param>
+                            </c:url>
                             <li class="nav-item">
-                                <a class="nav-link" href="javascript:void(0)">${c}</a>
+                                <a class="nav-link" href="${cUrl}">${c.name}</a>
                             </li>
                         </c:forEach>
                     </ul>
@@ -49,14 +53,21 @@
                 <li class="page-item"><a class="page-link" href="#">3</a></li>
                 <li class="page-item"><a class="page-link" href="#">Next</a></li>
             </ul>
+            <c:if test="${products.size() == 0}">
+                <p>
+                    <em>KHONG co san pham nao!!!</em>
+                </p>
+            </c:if>
             <div class="row">
                 <c:forEach items="${products}" var="p">
                     <div class="col-md-3 col-12">
                         <div class="card">
                             <img class="card-img-top" class="img-fluid" src="https://res.cloudinary.com/dxxwcby8l/image/upload/v1647248652/dkeolz3ghc0eino87iec.jpg" alt="Card image">
                             <div class="card-body">
-                                <h4 class="card-title">${p}</h4>
-                                <p class="card-text">24.000.000 VND</p>
+                                <h4 class="card-title">${p.name}</h4>
+                                <p class="card-text">
+                                    <fmt:formatNumber value="${p.price}" type="currency"/> VND
+                                </p>
                                 <a href="#" class="btn btn-primary">Xem chi tiet</a>
                             </div>
                         </div>
