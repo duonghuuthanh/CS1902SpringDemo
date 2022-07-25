@@ -28,7 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @author admin
  */
 @Repository
-@PropertySource("classpath:databases.properties")
+@PropertySource("classpath:messages.properties")
 @Transactional
 public class ProductRepositoryImpl implements ProductRepository {
 
@@ -45,35 +45,38 @@ public class ProductRepositoryImpl implements ProductRepository {
         Root root = q.from(Product.class);
         q.select(root);
 
-        List<Predicate> predicates = new ArrayList<>();
-        String kw = params.get("kw");
-        if (kw != null && !kw.isEmpty()) {
-            Predicate p = b.like(root.get("name").as(String.class),
-                    String.format("%%%s%%", kw));
-            predicates.add(p);
-        }
+        if (params != null) {
+            List<Predicate> predicates = new ArrayList<>();
+            String kw = params.get("kw");
+            if (kw != null && !kw.isEmpty()) {
+                Predicate p = b.like(root.get("name").as(String.class),
+                        String.format("%%%s%%", kw));
+                predicates.add(p);
+            }
 
-        String fp = params.get("fromPrice");
-        if (fp != null) {
-            Predicate p = b.greaterThanOrEqualTo(root.get("price").as(Long.class),
-                    Long.parseLong(fp));
-            predicates.add(p);
-        }
+            String fp = params.get("fromPrice");
+            if (fp != null) {
+                Predicate p = b.greaterThanOrEqualTo(root.get("price").as(Long.class),
+                        Long.parseLong(fp));
+                predicates.add(p);
+            }
 
-        String tp = params.get("toPrice");
-        if (tp != null) {
-            Predicate p = b.lessThanOrEqualTo(root.get("price").as(Long.class),
-                    Long.parseLong(tp));
-            predicates.add(p);
-        }
-        
-        String cateId = params.get("cateId");
-        if (cateId != null) {
-            Predicate p = b.equal(root.get("categoryId"), Integer.parseInt(cateId));
-            predicates.add(p);
-        }
+            String tp = params.get("toPrice");
+            if (tp != null) {
+                Predicate p = b.lessThanOrEqualTo(root.get("price").as(Long.class),
+                        Long.parseLong(tp));
+                predicates.add(p);
+            }
 
-        q.where(predicates.toArray(new Predicate[]{}));
+            String cateId = params.get("cateId");
+            if (cateId != null) {
+                Predicate p = b.equal(root.get("categoryId"), Integer.parseInt(cateId));
+                predicates.add(p);
+            }
+
+            q.where(predicates.toArray(new Predicate[]{}));
+
+        }
 
         q.orderBy(b.desc(root.get("id")), b.desc(root.get("name")));
 
@@ -87,6 +90,14 @@ public class ProductRepositoryImpl implements ProductRepository {
         }
 
         return query.getResultList();
+    }
+
+    @Override
+    public int countProduct() {
+        Session session = this.sessionFactory.getObject().getCurrentSession();
+        Query q = session.createQuery("SELECT Count(*) FROM Product");
+
+        return Integer.parseInt(q.getSingleResult().toString());
     }
 
 }
