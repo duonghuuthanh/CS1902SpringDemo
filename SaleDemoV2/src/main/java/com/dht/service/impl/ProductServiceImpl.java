@@ -31,5 +31,16 @@ public class ProductServiceImpl implements ProductService {
     public int countProduct() {
         return this.productRepository.countProduct();
     }
+
+    @Override
+    public boolean deleteProduct(int id) {
+        return this.productRepository.deleteProduct(id);
+    }
+
+    @Override
+    public boolean addProduct(Product p) {
+        p.setImage("https://res.cloudinary.com/dxxwcby8l/image/upload/v1647248652/dkeolz3ghc0eino87iec.jpg");
+        return this.productRepository.addProduct(p);
+    }
     
 }

@@ -100,4 +100,34 @@ public class ProductRepositoryImpl implements ProductRepository {
         return Integer.parseInt(q.getSingleResult().toString());
     }
 
+    @Override
+    public boolean deleteProduct(int id) {
+        Session session = this.sessionFactory.getObject().getCurrentSession();
+        
+        try {
+            Product p = session.get(Product.class, id);
+            session.delete(p);
+            
+            return true;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return false;
+        }
+    }
+
+    @Override
+    public boolean addProduct(Product p) {
+        Session session = this.sessionFactory.getObject().getCurrentSession();
+        
+        try {
+           
+            session.save(p);
+            
+            return true;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return false;
+        }
+    }
+
 }
