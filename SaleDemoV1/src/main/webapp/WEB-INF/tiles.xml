@@ -23,4 +23,9 @@ Software Foundation//DTD Tiles Configuration 3.0//EN"
         <put-attribute name="content"
                        value="/WEB-INF/jsp/products.jsp" />
     </definition>
+    <definition name="cate-stats" extends="baseLayout">
+        <put-attribute name="title" value="Thong ke san pham theo danh muc" />
+        <put-attribute name="content"
+                       value="/WEB-INF/jsp/cate-stats.jsp" />
+    </definition>
 </tiles-definitions>

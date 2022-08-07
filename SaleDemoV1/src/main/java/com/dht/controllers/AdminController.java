@@ -43,4 +43,11 @@ public class AdminController {
         
          return "products";
     }
+    
+    @GetMapping("/cate-stats")
+    public String cateStats(Model model) {
+        model.addAttribute("stats", this.productService.cateStats());
+        model.addAttribute("prodStats", this.productService.revenueStats());
+        return "cate-stats";
+    }
 }

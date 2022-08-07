@@ -44,4 +44,13 @@ public class ProductServiceImpl implements ProductService {
         
         return this.productRepository.addProduct(p);
     }
+    
+    public List<Object[]> cateStats() {
+        return this.productRepository.cateStats();
+    }
+
+    @Override
+    public List<Object[]> revenueStats() {
+        return this.productRepository.revenueStats();
+    }
 }
