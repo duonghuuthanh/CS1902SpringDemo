@@ -4,9 +4,11 @@
  */
 package com.dht.pojo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.Set;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -86,7 +88,11 @@ public class User implements Serializable {
     @Size(min = 1, max = 10)
     @Column(name = "user_role")
     private String userRole;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "userId")
+    @JsonIgnore
+    private Set<Comments> commentsSet;
     @OneToMany(mappedBy = "userId")
+    @JsonIgnore
     private Set<SaleOrder> saleOrderSet;
 
     public User() {
@@ -177,6 +183,15 @@ public class User implements Serializable {
 
     public void setUserRole(String userRole) {
         this.userRole = userRole;
+    }
+
+    @XmlTransient
+    public Set<Comments> getCommentsSet() {
+        return commentsSet;
+    }
+
+    public void setCommentsSet(Set<Comments> commentsSet) {
+        this.commentsSet = commentsSet;
     }
 
     @XmlTransient

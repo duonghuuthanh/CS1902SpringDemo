@@ -50,3 +50,41 @@ function getProducts(endpoint) {
         console.error(err);
     });
 }
+
+function loadComments(endpoint) {
+    fetch(endpoint).then(function(res) {
+        return res.json();
+    }).then(function(data) {
+        let h = '';
+        for (let c of data) {
+            h += `
+                <li class="list-group-item">${c.content} - binh luan boi ${c.user.username} - ${moment(c.createdDate).locale("vi").fromNow()}</li>
+            `
+        }
+        
+        let co = document.getElementById("comments");
+        co.innerHTML = h;
+    })
+}
+
+function addComment(endpoint, id) {
+    fetch(endpoint, {
+        method: 'post',
+        body:JSON.stringify({
+            "content": document.getElementById("contentId").value,
+            "productId": id
+        }),
+        headers: {
+            "Content-Type": "application/json"
+        }
+    }).then(function(res) {
+        return res.json();
+    }).then(function(data) {
+        let h = `
+                <li class="list-group-item">${data.content} - binh luan boi ${data.user.username} - ${moment(data.createdDate).locale("vi").fromNow()}</li>
+            `
+        let f = document.querySelector("#comments li:first-child");
+        f.insertAdjacentHTML("beforebegin", h);
+        console.info(data);
+    })
+}

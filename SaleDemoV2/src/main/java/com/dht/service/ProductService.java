@@ -4,6 +4,7 @@
  */
 package com.dht.service;
 
+import com.dht.pojo.Comment;
 import com.dht.pojo.Product;
 import java.util.List;
 import java.util.Map;
@@ -19,4 +20,7 @@ public interface ProductService {
     boolean addProduct(Product p);
     List<Object[]> cateStats();
     List<Object[]> revenueStats();
+    Product getProductById(int id);
+    List<Comment> getComments(int productId);
+    Comment addComment(String content, int productId);
 }

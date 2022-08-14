@@ -35,7 +35,7 @@
                     <p class="card-text">
                         <fmt:formatNumber value="${p.price}" maxFractionDigits="3" type="number"/> VND
                     </p>
-                    <a href="#" class="btn btn-primary">Xem chi tiet</a>
+                    <a href="<c:url value="/products/${p.id}" />" class="btn btn-primary">Xem chi tiet</a>
                 </div>
             </div>
         </div>

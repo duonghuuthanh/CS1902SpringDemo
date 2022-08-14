@@ -23,8 +23,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -56,15 +54,14 @@ public class Product implements Serializable {
     @Column(name = "id")
     private Integer id;
     @Basic(optional = false)
-    @Size(min = 1, max = 50, message = "{product.name.nullErr}")
+    @NotNull
+    @Size(min = 1, max = 50)
     @Column(name = "name")
     private String name;
     @Size(max = 255)
     @Column(name = "description")
     private String description;
     @Column(name = "price")
-    @Min(value = 10000, message = "{product.price.minErr}")
-    @Max(value = 100000000, message = "{product.price.maxErr}")
     private Long price;
     @Size(max = 50)
     @Column(name = "manufacturer")
@@ -81,6 +78,9 @@ public class Product implements Serializable {
     @ManyToOne(optional = false)
     @JsonIgnore
     private Category categoryId;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "productId")
+    @JsonIgnore
+    private Set<Comments> commentsSet;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "productId")
     @JsonIgnore
     private Set<OrderDetail> orderDetailSet;
@@ -167,6 +167,15 @@ public class Product implements Serializable {
 
     public void setCategoryId(Category categoryId) {
         this.categoryId = categoryId;
+    }
+
+    @XmlTransient
+    public Set<Comments> getCommentsSet() {
+        return commentsSet;
+    }
+
+    public void setCommentsSet(Set<Comments> commentsSet) {
+        this.commentsSet = commentsSet;
     }
 
     @XmlTransient

@@ -48,3 +48,40 @@ function loadProducts(endpoint) {
         d.innerHTML = msg;
     });
 }
+
+function loadComment(endpoint, productId) {
+    fetch(endpoint).then(function(res) {
+        return res.json();
+    }).then(function(data) {
+        console.info(data)
+        let h = '';
+        for (let c of data)
+            h += `
+                <a href="#" class="list-group-item list-group-item-action">${c.content} - binh luan boi ${c.user.username} - ${moment(c.createdDate).locale("vi").fromNow()}</a>
+            `
+        
+        let d = document.getElementById("comments");
+        d.innerHTML = h;
+    });
+}
+
+function addComment(endpoint, proId) {
+    fetch(endpoint, {
+        method: "post",
+        body: JSON.stringify({
+            "content": document.getElementById("content").value,
+            "productId": proId
+        }),
+        headers: {
+            'Content-Type': "application/json"
+        }
+    }).then(function(res) {
+        return res.json();
+    }).then(function(data) {
+        let d = document.querySelector("#comments a:first-child");
+        let h = `
+                <a href="#" class="list-group-item list-group-item-action">${data.content} - binh luan boi ${data.user.username} - ${moment(data.createdDate).locale("vi").fromNow()}</a>
+            `;
+        d.insertAdjacentHTML("beforebegin", h);
+    })
+}

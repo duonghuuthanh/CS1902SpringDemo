@@ -5,9 +5,11 @@
 package com.dht.repository.impl;
 
 import com.dht.pojo.Category;
+import com.dht.pojo.Comments;
 import com.dht.pojo.OrderDetail;
 import com.dht.pojo.Product;
 import com.dht.pojo.SaleOrder;
+import com.dht.pojo.User;
 import com.dht.repository.ProductRepository;
 import java.util.ArrayList;
 import java.util.List;
@@ -168,6 +170,35 @@ public class ProductRepositoryImpl implements ProductRepository {
         
         Query query = session.createQuery(q);
         return query.getResultList();
+    }
+    
+    @Override
+    public List<Comments> getComments() {
+        Session session = this.sessionFactory.getObject().getCurrentSession();
+        Query q = session.createQuery("FROM Comments");
+
+        return q.getResultList();
+    }
+    
+    @Override
+    public Product getProductById(int id) {
+        Session session = this.sessionFactory.getObject().getCurrentSession();
+        return session.get(Product.class, id);
+    }
+
+    @Override
+    public Comments addComment(String content, int productId) {
+        Session session = this.sessionFactory.getObject().getCurrentSession();
+        
+        Comments c = new Comments();
+        c.setContent(content);
+        c.setProductId(this.getProductById(productId));
+        c.setUserId(session.get(User.class, 6));
+        
+        
+        session.save(c);
+        
+        return c;
     }
 
 }

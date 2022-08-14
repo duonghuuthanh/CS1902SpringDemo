@@ -4,7 +4,9 @@
  */
 package com.dht.pojo;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.Serializable;
+import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,6 +18,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -24,14 +29,14 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author admin
  */
 @Entity
-@Table(name = "order_detail")
+@Table(name = "comments")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "OrderDetail.findAll", query = "SELECT o FROM OrderDetail o"),
-    @NamedQuery(name = "OrderDetail.findById", query = "SELECT o FROM OrderDetail o WHERE o.id = :id"),
-    @NamedQuery(name = "OrderDetail.findByUnitPrice", query = "SELECT o FROM OrderDetail o WHERE o.unitPrice = :unitPrice"),
-    @NamedQuery(name = "OrderDetail.findByNum", query = "SELECT o FROM OrderDetail o WHERE o.num = :num")})
-public class OrderDetail implements Serializable {
+    @NamedQuery(name = "Comments.findAll", query = "SELECT c FROM Comments c"),
+    @NamedQuery(name = "Comments.findById", query = "SELECT c FROM Comments c WHERE c.id = :id"),
+    @NamedQuery(name = "Comments.findByContent", query = "SELECT c FROM Comments c WHERE c.content = :content"),
+    @NamedQuery(name = "Comments.findByCreatedDate", query = "SELECT c FROM Comments c WHERE c.createdDate = :createdDate")})
+public class Comments implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -39,23 +44,32 @@ public class OrderDetail implements Serializable {
     @Basic(optional = false)
     @Column(name = "id")
     private Integer id;
-    @Column(name = "unit_price")
-    private Long unitPrice;
-    @Size(max = 45)
-    @Column(name = "num")
-    private String num;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 255)
+    @Column(name = "content")
+    private String content;
+    @Column(name = "created_date")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date createdDate = new Date();
     @JoinColumn(name = "product_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Product productId;
-    @JoinColumn(name = "order_id", referencedColumnName = "id")
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
-    private SaleOrder orderId;
+    @JsonProperty("user")
+    private User userId;
 
-    public OrderDetail() {
+    public Comments() {
     }
 
-    public OrderDetail(Integer id) {
+    public Comments(Integer id) {
         this.id = id;
+    }
+
+    public Comments(Integer id, String content) {
+        this.id = id;
+        this.content = content;
     }
 
     public Integer getId() {
@@ -66,20 +80,20 @@ public class OrderDetail implements Serializable {
         this.id = id;
     }
 
-    public Long getUnitPrice() {
-        return unitPrice;
+    public String getContent() {
+        return content;
     }
 
-    public void setUnitPrice(Long unitPrice) {
-        this.unitPrice = unitPrice;
+    public void setContent(String content) {
+        this.content = content;
     }
 
-    public String getNum() {
-        return num;
+    public Date getCreatedDate() {
+        return createdDate;
     }
 
-    public void setNum(String num) {
-        this.num = num;
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
     }
 
     public Product getProductId() {
@@ -90,12 +104,12 @@ public class OrderDetail implements Serializable {
         this.productId = productId;
     }
 
-    public SaleOrder getOrderId() {
-        return orderId;
+    public User getUserId() {
+        return userId;
     }
 
-    public void setOrderId(SaleOrder orderId) {
-        this.orderId = orderId;
+    public void setUserId(User userId) {
+        this.userId = userId;
     }
 
     @Override
@@ -108,10 +122,10 @@ public class OrderDetail implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof OrderDetail)) {
+        if (!(object instanceof Comments)) {
             return false;
         }
-        OrderDetail other = (OrderDetail) object;
+        Comments other = (Comments) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -120,7 +134,7 @@ public class OrderDetail implements Serializable {
 
     @Override
     public String toString() {
-        return "com.dht.pojo.OrderDetail[ id=" + id + " ]";
+        return "com.dht.pojo.Comments[ id=" + id + " ]";
     }
     
 }
